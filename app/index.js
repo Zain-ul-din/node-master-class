@@ -1,7 +1,9 @@
 const http = require("http");
 const url = require("url");
-const util = require("./util");
 const StringDecoder = require("string_decoder").StringDecoder;
+
+const util = require("./util");
+const handlers = require("./handlers");
 
 const serverConfig = {
   port: 3000,
@@ -58,12 +60,36 @@ const server = http.createServer((req, res) => {
     buffer += stringDecoder.end();
     console.log("payload: ", buffer);
 
-    // end request
-    res.write("hello world");
-    res.end();
+    const chosenHandler =
+      typeof routes[trimmedPath] !== "undefined"
+        ? routes[trimmedPath]
+        : handlers.notFound;
+
+    const requestMetaData = {
+      url: trimmedPath,
+      query,
+      method,
+      headers,
+      payload: buffer,
+    };
+
+    // route the request to chosen handler
+    chosenHandler(requestMetaData, function (statusCode, data) {
+      statusCode = typeof statusCode === "number" ? statusCode : 200;
+      data = typeof data === "object" ? data : {};
+
+      res.setHeader("Content-Type", "application/json");
+      res.writeHead(statusCode);
+      res.end(JSON.stringify(data));
+    });
   });
 });
 
 server.listen(serverConfig.port, "localhost", () => {
   console.log(`Server is running on post ${serverConfig.port}`);
 });
+
+// define application routes
+const routes = {
+  "/": handlers.home,
+};
