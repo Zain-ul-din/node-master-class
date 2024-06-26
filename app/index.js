@@ -40,6 +40,13 @@ const server = http.createServer((req, res) => {
   console.log("path name: ", pathname);
   console.log("trimmed path: ", trimmedPath);
 
+  /**
+   * Extract http method from the request object
+   */
+  const method = req.method;
+
+  console.log("request method: ", method);
+
   // end request
   res.write("hello world");
   res.end();
