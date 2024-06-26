@@ -1,6 +1,7 @@
 const http = require("http");
 const url = require("url");
 const util = require("./util");
+const StringDecoder = require("string_decoder").StringDecoder;
 
 const serverConfig = {
   port: 3000,
@@ -39,9 +40,28 @@ const server = http.createServer((req, res) => {
 
   console.log("request headers: ", JSON.stringify(headers, null, 2));
 
-  // end request
-  res.write("hello world");
-  res.end();
+  /**
+   * Parse Payload
+   */
+  const stringDecoder = new StringDecoder("utf-8");
+  let buffer = "";
+
+  console.log("--- Going to parse payload ---");
+
+  // client sending data in stream
+  req.on("data", (chunk) => {
+    buffer += stringDecoder.write(chunk);
+  });
+
+  // emits on request end
+  req.on("end", () => {
+    buffer += stringDecoder.end();
+    console.log("payload: ", buffer);
+
+    // end request
+    res.write("hello world");
+    res.end();
+  });
 });
 
 server.listen(serverConfig.port, "localhost", () => {
