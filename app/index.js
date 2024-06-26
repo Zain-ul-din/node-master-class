@@ -1,6 +1,5 @@
 const http = require("http");
 const url = require("url");
-const path = require("path");
 
 const serverConfig = {
   port: 3000,
@@ -32,8 +31,8 @@ const server = http.createServer((req, res) => {
   /**
    * Extract Request path from the request object
    */
-  const requestedUrl = url.parse(req.url);
-  const { pathname } = requestedUrl;
+  const parsedUrl = url.parse(req.url, true);
+  const { pathname } = parsedUrl;
   const trimmedPath = trimUrl(pathname);
 
   console.log("raw url: ", req.url);
@@ -46,6 +45,13 @@ const server = http.createServer((req, res) => {
   const method = req.method;
 
   console.log("request method: ", method);
+
+  /**
+   * Extract Query string from url & Get Query string as an object
+   */
+  const { query } = parsedUrl;
+
+  console.log("request query: ", JSON.stringify(query, null, 2));
 
   // end request
   res.write("hello world");
