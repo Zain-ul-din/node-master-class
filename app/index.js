@@ -1,30 +1,9 @@
 const http = require("http");
 const url = require("url");
+const util = require("./util");
 
 const serverConfig = {
   port: 3000,
-};
-
-/**
- * trim url path also removes double slashes from url
- *
- * Example:
- * ```md
- * /foo//bar// => /foo/bar
- * /hello/ => /hello
- * / => /
- * ```
- * @param {string} url
- * @returns string
- */
-const trimUrl = (url) => {
-  return (
-    "/" + // since first segment always gonna be empty string
-    url
-      .split("/")
-      .filter((segment) => segment.length > 0)
-      .join("/")
-  );
 };
 
 const server = http.createServer((req, res) => {
@@ -33,7 +12,7 @@ const server = http.createServer((req, res) => {
    */
   const parsedUrl = url.parse(req.url, true);
   const { pathname } = parsedUrl;
-  const trimmedPath = trimUrl(pathname);
+  const trimmedPath = util.trimUrl(pathname);
 
   console.log("raw url: ", req.url);
   console.log("path name: ", pathname);
