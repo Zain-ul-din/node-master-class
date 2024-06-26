@@ -53,6 +53,13 @@ const server = http.createServer((req, res) => {
 
   console.log("request query: ", JSON.stringify(query, null, 2));
 
+  /**
+   * Get request headers
+   */
+  const { headers } = req;
+
+  console.log("request headers: ", JSON.stringify(headers, null, 2));
+
   // end request
   res.write("hello world");
   res.end();
