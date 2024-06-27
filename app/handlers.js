@@ -11,6 +11,24 @@ handlers.home = function (reqMetaData, callback) {
 };
 
 /**
+ * Ping Handler
+ * @param {any} reqMetaData
+ * @param {(statusCode: number, data: any)=> void} callback
+ */
+handlers.ping = function (reqMetaData, callback) {
+  callback(200);
+};
+
+/**
+ * Hello Handler
+ * @param {any} reqMetaData
+ * @param {(statusCode: number, data: any)=> void} callback
+ */
+handlers.hello = function (reqMetaData, callback) {
+  callback(200, { message: "Hello there!" });
+};
+
+/**
  * Not found Handler
  * @param {any} reqMetaData
  * @param {(statusCode: number, data: any)=> void} callback
