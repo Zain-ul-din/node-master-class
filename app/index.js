@@ -4,10 +4,7 @@ const StringDecoder = require("string_decoder").StringDecoder;
 
 const util = require("./util");
 const handlers = require("./handlers");
-
-const serverConfig = {
-  port: 3000,
-};
+const config = require("./config");
 
 const server = http.createServer((req, res) => {
   /**
@@ -70,7 +67,7 @@ const server = http.createServer((req, res) => {
       query,
       method,
       headers,
-      payload: buffer,
+      payload: buffer
     };
 
     // route the request to chosen handler
@@ -85,11 +82,13 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(serverConfig.port, "localhost", () => {
-  console.log(`Server is running on post ${serverConfig.port}`);
+server.listen(config.port, "localhost", () => {
+  console.log(
+    `Server is running on post ${config.port}. Environment is ${config.name}`
+  );
 });
 
 // define application routes
 const routes = {
-  "/": handlers.home,
+  "/": handlers.home
 };
